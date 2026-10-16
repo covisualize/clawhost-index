@@ -1,0 +1,3 @@
+export default function Page() { return (<><h1>Affiliate disclosure &amp; data rules</h1>
+<p>Right now every link on ClawHost Index is a plain, non-affiliate link. If we add affiliate links later, they will be labelled, and they will never change rankings or which plans we show.</p>
+<h2>The price rule</h2><p>Every price shows its source URL and the date it was checked. Prices older than 30 days are marked <span className="stale">STALE</span>. Some seed prices come from third-party trackers (trackvps.com, vpsranker.com) and are labelled as such until we re-check them on the provider's own page. Promo and first-term prices are noted next to the renewal price where we know it.</p></>); }
