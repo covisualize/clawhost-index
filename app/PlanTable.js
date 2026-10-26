@@ -13,7 +13,7 @@ export default function PlanTable({ plans }) {
       <label>Agent<select value={agent} onChange={e=>setAgent(e.target.value)}><option value="all">Any</option><option>OpenClaw</option><option>Hermes</option><option>Claude Code</option></select></label>
       <label>One-click<span><input type="checkbox" checked={oc} onChange={e=>setOc(e.target.checked)} /> only</span></label>
     </div>
-    <p className="sub">{rows.length} plans · sorted by GBP · converted at ECB rates of 16 Oct 2026 · original price shown underneath</p>
+    <p className="sub">{rows.length} plans · sorted by GBP · converted at ECB rates of 23 Oct 2026 · original price shown underneath</p>
     <table><thead><tr><th>Provider / plan</th><th>Price /mo (GBP)</th><th>vCPU</th><th>RAM</th><th>Disk</th><th>Type</th><th>Agents · one-click</th><th>Source &amp; checked</th><th></th></tr></thead>
     <tbody>{rows.map(p=>(<tr key={p.id}>
       <td><a href={`/provider/${p.providerSlug}`}>{p.provider}</a><br/><span className="src">{p.plan}</span></td>
