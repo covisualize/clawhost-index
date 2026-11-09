@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --test test/signup.test.mjs",
+    "test": "node --test test/*.test.mjs",
     "build": "next build",
     "start": "next start -p 3123",
     "dev": "next dev"

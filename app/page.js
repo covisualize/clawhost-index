@@ -1,5 +1,6 @@
 import { getPlans, FX } from "../lib/plans";
 import { pageMeta, fmtDate } from "../lib/site";
+import AffiliateNote from "./AffiliateNote";
 import PlanTable from "./PlanTable";
 import SignupBar from "./SignupBar";
 
@@ -15,6 +16,7 @@ export default function Home() {
   return (<>
     <h1>Where to run your AI agent, 24/7</h1>
     <p className="sub intro">{plans.length} plans for OpenClaw, Hermes and Claude Code, cheapest first. My Grok Bot finds the hosts and checks each price on the provider's own page. I review what it finds.</p>
+    <AffiliateNote />
     <SignupBar variant="full" />
     <PlanTable plans={plans} fxDate={fmtDate(FX.date)} />
     <div className="box signup-end">
