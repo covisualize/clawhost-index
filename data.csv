@@ -11,8 +11,8 @@ Netcup,VPS 500 G12.5,vps,2,4,64,8.26,EUR,12-month term; ex VAT (€9.50 incl. 19
 Netcup,VPS 1000 G12.5,vps,4,8,128,14.50,EUR,12-month term; ex VAT,https://www.netcup.com/en/server/vps,2026-11-09,provider,
 UpCloud,Starter 2 core / 4GB,vps,2,4,30,12.00,EUR,hourly; ex tax; EUR global price,https://upcloud.com/pricing/,2026-11-09,provider,
 UpCloud,Starter 4 core / 8GB,vps,4,8,40,20.00,EUR,hourly; ex tax; EUR global price,https://upcloud.com/pricing/,2026-11-09,provider,
-DigitalOcean,Basic Droplet 4GB,vps,2,4,80,24.00,USD,no contract; per-second billing,https://www.digitalocean.com/pricing/droplets,2026-11-09,provider,
-DigitalOcean,Basic Droplet 8GB,vps,4,8,160,48.00,USD,no contract,https://www.digitalocean.com/pricing/droplets,2026-11-09,provider,
+DigitalOcean,Basic Droplet 4GB,vps,2,4,80,24.00,USD,no contract; per-second billing,https://www.digitalocean.com/pricing/droplets,2026-11-09,provider,https://www.awin1.com/cread.php?awinmid=123996&awinaffid=3142395&ued=https%3A%2F%2Fwww.digitalocean.com%2Fpricing%2Fdroplets
+DigitalOcean,Basic Droplet 8GB,vps,4,8,160,48.00,USD,no contract,https://www.digitalocean.com/pricing/droplets,2026-11-09,provider,https://www.awin1.com/cread.php?awinmid=123996&awinaffid=3142395&ued=https%3A%2F%2Fwww.digitalocean.com%2Fpricing%2Fdroplets
 Akamai (Linode),Shared Linode 4GB,vps,2,4,80,24.00,USD,hourly ($0.036/hr); North America price,https://www.akamai.com/cloud/pricing/cpu,2026-11-09,provider,
 AWS Lightsail,Linux 4GB (IPv4),vps,2,4,80,24.00,USD,monthly bundle,https://aws.amazon.com/lightsail/pricing/,2026-11-09,provider,
 AWS Lightsail,Linux 8GB (IPv4),vps,2,8,160,44.00,USD,monthly bundle,https://aws.amazon.com/lightsail/pricing/,2026-11-09,provider,
