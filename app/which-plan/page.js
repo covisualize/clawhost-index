@@ -25,7 +25,7 @@ function Plans({ rows }) {
   return (<table className="plans plans-pick"><thead><tr><th>Provider / plan</th><th>Price /mo (GBP)</th><th>vCPU</th><th>RAM</th><th>Type</th></tr></thead>
     <tbody>{rows.map(p => <tr key={p.id}>
       <td data-label="Plan" className="c-name"><a href={`/provider/${p.providerSlug}/`}>{p.provider}</a><br/><span className="src">{p.plan}</span></td>
-      <td data-label="Price /mo" className="c-price"><b>£{p.gbp.toFixed(2)}</b><br/><span className="src">{p.currency === "EUR" ? "€" : "$"}{p.price.toFixed(2)} {p.currency} · checked {p.source_checked}</span></td>
+      <td data-label="Price /mo" className="c-price"><b>£{p.gbp.toFixed(2)}</b><br/><span className="src">{p.currency === "EUR" ? "€" : "$"}{p.price.toFixed(2)} {p.currency} · checked {p.source_checked}</span>{p.billing_note && <><br/><span className="src note">{p.billing_note}</span></>}</td>
       <td data-label="vCPU" className="c-spec">{p.vcpu}</td><td data-label="RAM" className="c-spec">{p.ram_gb} GB</td>
       <td data-label="Type" className="c-spec">{p.managed ? "Managed" : p.type === "free" ? "Free tier" : "VPS"}</td>
     </tr>)}</tbody></table>);

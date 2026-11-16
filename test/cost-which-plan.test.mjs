@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import Papa from "papaparse";
+import { AGENTS } from "../lib/agents.js";
+import { serverGbp, sortPlans, defaultPlan } from "../lib/cost.js";
 
 const ANTHROPIC = "https://platform.claude.com/docs/en/about-claude/pricing";
 const OPENAI = "https://developers.openai.com/api/docs/pricing";
@@ -11,7 +13,41 @@ const amp = (s) => s.replaceAll("&", "&amp;");
 const exported = (url) => readFileSync(url, "utf8").replaceAll("<!-- -->", "");
 const esc = (s) => s.replaceAll("&", "&amp;").replaceAll("'", "&#x27;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-const freePlans = Papa.parse(read("data.csv"), { header: true, skipEmptyLines: true }).data.filter(p => p.type === "free");
+const rows = Papa.parse(read("data.csv"), { header: true, skipEmptyLines: true }).data;
+const freePlans = rows.filter(p => p.type === "free");
+
+describe("server price at the user's USD → GBP rate", () => {
+  const anyAgent = ["Any (self-host)"];
+  const plan = (id, currency, price, gbp, extra = {}) => ({ id, provider: `P${id}`, plan: "x", currency, price, gbp, ram_gb: 4, type: "vps", agents: anyAgent, ...extra });
+  const usd = plan(0, "USD", 10, 7.56), eur = plan(1, "EUR", 9, 7.52), gbp = plan(2, "GBP", 7.6, 7.6), free = plan(3, "USD", 0, 0, { type: "free" });
+  const openclaw = AGENTS.find(a => a.name === "OpenClaw");
+
+  it("converts USD with the edited rate, leaves GBP alone and keeps ECB for EUR", () => {
+    assert.equal(serverGbp(usd, 0.5), 5);
+    assert.equal(serverGbp(usd, 1), 10);
+    assert.equal(serverGbp(gbp, 0.5), 7.6);
+    assert.equal(serverGbp(eur, 0.5), 7.52);
+    assert.equal(serverGbp(eur, 1), 7.52);
+  });
+
+  it("re-sorts and re-picks the default plan when the rate changes, never picking a free tier", () => {
+    const plans = [eur, gbp, usd, free];
+    assert.deepEqual(sortPlans(plans, 0.5).map(p => p.id), [3, 0, 1, 2]);
+    assert.deepEqual(sortPlans(plans, 1).map(p => p.id), [3, 1, 2, 0]);
+    assert.equal(defaultPlan(plans, openclaw, 0.5).id, usd.id);
+    assert.equal(defaultPlan(plans, openclaw, 1).id, eur.id);
+    assert.equal(defaultPlan([free], openclaw, 1).id, free.id, "falls back to a free tier only if nothing else fits");
+  });
+
+  it("is the one helper the calculator uses for labels, sorting, the default and the total", () => {
+    const calc = read("app/cost/CostCalc.js");
+    assert.match(calc, /from "..\/..\/lib\/cost"/);
+    assert.match(calc, /sortPlans\(plans, usdGbp\)/);
+    assert.match(calc, /£\$\{fmt\(serverGbp\(p, usdGbp\)\)\}\/mo/);
+    assert.match(calc, /const server = serverGbp\(plan, usdGbp\)/);
+    assert.doesNotMatch(calc, /\.gbp\b/, "the calculator shouldn't read plan.gbp directly");
+  });
+});
 
 describe("/cost/ and /which-plan/ pages", () => {
   it("are in the nav and the sitemap", () => {
@@ -84,6 +120,29 @@ describe("exported /cost/ and /which-plan/ HTML", () => {
     for (const p of freePlans) {
       assert.ok(notes.includes(`href="/provider/${slug(p.provider)}/"`), `${p.provider} free-tier link missing`);
       assert.ok(notes.includes(esc(p.billing_note)), `${p.provider} billing note missing`);
+    }
+  });
+
+  it("cost page shows the default plan's billing terms next to the result", { skip: !ready }, () => {
+    const html = exported(cost);
+    const label = html.match(/Server plan<select>[\s\S]*?<option value="\d+" selected="">([^<]*)<\/option>/)[1];
+    const p = rows.find(r => label.startsWith(esc(`${r.provider} ${r.plan} · `)));
+    assert.ok(p, `selected plan not in data.csv: ${label}`);
+    const terms = html.match(/data-testid="plan-terms"[^>]*>([^<]*)</)[1];
+    assert.equal(terms, p.billing_note ? esc(p.billing_note) : "No extra terms noted in the index.");
+    assert.ok(read("app/cost/page.js").includes("billing_note"), "page must pass billing_note to the calculator");
+  });
+
+  it("which-plan shows each listed plan's billing note", { skip: !ready }, () => {
+    const html = exported(which);
+    const trs = [...html.matchAll(/<table class="plans plans-pick">[\s\S]*?<\/table>/g)]
+      .flatMap(m => [...m[0].matchAll(/<tr>(<td[\s\S]*?)<\/tr>/g)].map(r => r[1]));
+    assert.ok(trs.length > 0);
+    for (const tr of trs) {
+      const [, provider, name] = tr.match(/<a href="\/provider\/[^"]+\/">([^<]*)<\/a><br\/><span class="src">([^<]*)<\/span>/);
+      const p = rows.find(r => esc(r.provider) === provider && esc(r.plan) === name);
+      assert.ok(p, `${provider} ${name} not in data.csv`);
+      if (p.billing_note) assert.ok(tr.includes(`<span class="src note">${esc(p.billing_note)}</span>`), `${provider} ${name} billing note missing`);
     }
   });
 });

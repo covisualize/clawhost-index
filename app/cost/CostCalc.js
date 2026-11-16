@@ -2,38 +2,40 @@
 import { useState } from "react";
 import { AGENTS, supports } from "../../lib/agents";
 import { MODELS, PRESETS, DEFAULT_MODEL } from "../../lib/models";
+import { serverGbp, sortPlans, defaultPlan } from "../../lib/cost";
 
 const num = (s) => { const n = parseFloat(s); return Number.isFinite(n) && n > 0 ? n : 0; };
 const fmt = (n) => n.toFixed(2);
 
 export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
-  const sorted = [...plans].sort((a, b) => a.gbp - b.gbp);
-  // Cheapest paid plan that meets the agent's minimum RAM and lists the agent. A £0 free tier
-  // would make the server look free, so free tiers stay selectable but are never the default.
-  const fits = (p, a) => p.ram_gb >= a.minRamGb && supports(p, a);
-  const pick = (a) => (sorted.find(p => p.type !== "free" && fits(p, a)) || sorted.find(p => fits(p, a)) || sorted[0]).id;
   const first = MODELS.find(m => m.id === DEFAULT_MODEL);
+  const startRate = +fxRate.toFixed(5);
 
   const [agentId, setAgentId] = useState(AGENTS[0].id);
-  const [planId, setPlanId] = useState(() => pick(AGENTS[0]));
+  const [planId, setPlanId] = useState(() => defaultPlan(plans, AGENTS[0], startRate).id);
+  // Once someone picks a plan themselves, a rate change shouldn't swap it out from under them.
+  const [planChosen, setPlanChosen] = useState(false);
   const [mode, setMode] = useState("preset");
   const [preset, setPreset] = useState("medium");
   const [modelId, setModelId] = useState(DEFAULT_MODEL);
   const [inM, setInM] = useState(String(PRESETS.medium.inM)), [outM, setOutM] = useState(String(PRESETS.medium.outM));
   const [inPrice, setInPrice] = useState(String(first.inUsd)), [outPrice, setOutPrice] = useState(String(first.outUsd));
   const [spend, setSpend] = useState(""), [spendCur, setSpendCur] = useState("USD");
-  const [rate, setRate] = useState(String(+fxRate.toFixed(5)));
+  const [rate, setRate] = useState(String(startRate));
 
   const agent = AGENTS.find(a => a.id === agentId);
-  const plan = plans.find(p => p.id === planId) || sorted[0];
   const model = MODELS.find(m => m.id === modelId);
   const usdGbp = num(rate);
+  const sorted = sortPlans(plans, usdGbp);
+  const plan = plans.find(p => p.id === planId) || sorted[0];
 
-  const onAgent = (id) => { setAgentId(id); setPlanId(pick(AGENTS.find(a => a.id === id))); };
+  const onAgent = (id) => { setAgentId(id); setPlanChosen(false); setPlanId(defaultPlan(plans, AGENTS.find(a => a.id === id), usdGbp).id); };
+  const onPlan = (id) => { setPlanId(id); setPlanChosen(true); };
+  const onRate = (v) => { setRate(v); if (!planChosen) setPlanId(defaultPlan(plans, agent, num(v)).id); };
   const onPreset = (k) => { setPreset(k); setInM(String(PRESETS[k].inM)); setOutM(String(PRESETS[k].outM)); };
   const onModel = (id) => { const m = MODELS.find(x => x.id === id); setModelId(id); setInPrice(String(m.inUsd)); setOutPrice(String(m.outUsd)); };
 
-  const server = plan.currency === "USD" ? plan.price * usdGbp : plan.gbp;
+  const server = serverGbp(plan, usdGbp);
   const modelGbp = mode === "spend"
     ? (spendCur === "GBP" ? num(spend) : num(spend) * usdGbp)
     : (num(inM) * (mode === "preset" ? model.inUsd : num(inPrice)) + num(outM) * (mode === "preset" ? model.outUsd : num(outPrice))) * usdGbp;
@@ -53,8 +55,8 @@ export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
       <label>Agent<select value={agentId} onChange={e => onAgent(e.target.value)}>
         {AGENTS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
       </select></label>
-      <label>Server plan<select value={planId} onChange={e => setPlanId(+e.target.value)}>
-        {sorted.map(p => <option key={p.id} value={p.id}>{`${p.provider} ${p.plan} · ${p.ram_gb} GB · £${p.gbp.toFixed(2)}/mo${p.type === "free" ? " · free tier" : ""}`}</option>)}
+      <label>Server plan<select value={planId} onChange={e => onPlan(+e.target.value)}>
+        {sorted.map(p => <option key={p.id} value={p.id}>{`${p.provider} ${p.plan} · ${p.ram_gb} GB · £${fmt(serverGbp(p, usdGbp))}/mo${p.type === "free" ? " · free tier" : ""}`}</option>)}
       </select></label>
     </div>
     <p className="src">Default is the cheapest paid plan with at least {agent.minRamGb} GB RAM that lists {agent.name}. Free tiers are in the list too. <a href={`/provider/${plan.providerSlug}/`}>{plan.provider} plans and prices</a></p>
@@ -93,13 +95,16 @@ export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
     </>}
 
     <div className="row">
-      <label>USD → GBP rate<input type="number" inputMode="decimal" min={0} step="any" value={rate} onChange={e => setRate(e.target.value)} /></label>
+      <label>USD → GBP rate<input type="number" inputMode="decimal" min={0} step="any" value={rate} onChange={e => onRate(e.target.value)} /></label>
     </div>
-    <p className="src">Default is the ECB reference rate of {fxDate} (<a href={fxSource}>source</a>). Used for USD model prices and USD-priced plans.</p>
+    <p className="src">Default is the ECB reference rate of {fxDate} (<a href={fxSource}>source</a>). Used for USD model prices and USD-priced plans, including the plan list above. EUR-priced plans keep the site's ECB EUR → GBP conversion, because this box is USD → GBP only.</p>
 
     <div className="cost-out" aria-live="polite">
       <p className="cost-total">Server £<b data-testid="server-gbp" id="server-gbp">{fmt(server)}</b> + Model £<b data-testid="model-gbp" id="model-gbp">{fmt(modelGbp)}</b> = Total £<b data-testid="total-gbp" id="total-gbp">{fmt(total)}</b> per month</p>
       <p>The model is <b data-testid="model-share" id="model-share">{share}%</b> of the total.</p>
+      <p className="src">Server is the listed monthly price of {`${plan.provider} ${plan.plan}`} ({`${plan.currency === "EUR" ? "€" : plan.currency === "GBP" ? "£" : "$"}${plan.price.toFixed(2)} ${plan.currency}`}). {plan.billing_note
+        ? <>Terms: <b data-testid="plan-terms" id="plan-terms">{plan.billing_note}</b>. An intro, upfront or yearly price isn't always what you'll pay each month, so check the <a href={`/provider/${plan.providerSlug}/`}>provider page</a>.</>
+        : <span data-testid="plan-terms" id="plan-terms">No extra terms noted in the index.</span>}</p>
     </div>
   </div>);
 }

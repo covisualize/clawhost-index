@@ -16,8 +16,8 @@ const usd = (n) => `$${n < 1 ? n : n.toFixed(2)}`;
 
 export default function Cost() {
   // Only what the calculator needs.
-  const plans = getPlans().map(({ id, provider, plan, ram_gb, vcpu, gbp, price, currency, providerSlug, agents, type }) =>
-    ({ id, provider, plan, ram_gb, vcpu, gbp, price, currency, providerSlug, agents, type }));
+  const plans = getPlans().map(({ id, provider, plan, ram_gb, vcpu, gbp, price, currency, providerSlug, agents, type, billing_note }) =>
+    ({ id, provider, plan, ram_gb, vcpu, gbp, price, currency, providerSlug, agents, type, billing_note }));
   const checked = fmtDate(MODELS_CHECKED);
   const A = PRICE_SOURCES;
   return (<>
