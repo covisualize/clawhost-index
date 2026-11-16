@@ -49,7 +49,7 @@ export default function Gotchas() {
     <p className="crumb"><a href="/">← All plans</a></p>
     <h1>7 hosting gotchas for running AI agents on a VPS</h1>
     <p className="sub">What to check before you trust a headline price for OpenClaw, Hermes or Claude Code. Every figure here comes from the ClawHost Index table, which links each price to the provider's own page with the date it was checked.</p>
-    <p className="byline">By Charles. My Grok Bot found the hosts and checked the prices, and I reviewed them. Prices checked {checked}. GBP at ECB rates of {fmtDate(FX.date)}.</p>
+    <p className="byline">By Charles. My Side Hustle CEO agent found the hosts and checked the prices, and I reviewed them. Prices checked {checked}. GBP at ECB rates of {fmtDate(FX.date)}.</p>
 
     <h2>1. The price you see is not the price you renew at</h2>
     <p>Hostinger's KVM 1 is {gbp(kvm1.gbp)} a month at the start, then renews at ${renew1} a month (about {gbp(usdToGbp(renew1))}). KVM 2 is {gbp(kvm2.gbp)} a month and renews at ${renew2} (about {gbp(usdToGbp(renew2))}). Find the renewal price before you pay, because that's what you carry on paying.</p>

@@ -20,7 +20,7 @@ export default async function Issue({ params }) {
     <p className="crumb"><a href="/newsletter/">← All issues</a></p>
     <h1>{i.subject}</h1>
     <p className="src">Issue #{i.n} · sent {i.dateLabel} · archive copy of the email</p>
-    <p className="byline">My Grok Bot finds the hosts and checks the prices, and I review what it finds before each issue goes out. Prices here are as of {i.dateLabel}. <a href="/">See today's prices</a>.</p>
+    <p className="byline">My Side Hustle CEO agent finds the hosts and checks the prices, and I review what it finds before each issue goes out. Prices here are as of {i.dateLabel}. <a href="/">See today's prices</a>.</p>
     <div className="issue-body" dangerouslySetInnerHTML={{ __html: renderBody(i.body) }} />
     <SignupBar variant="compact" />
     <p>{older && <a href={older.href}>← Issue #{older.n}</a>}{older && newer && " · "}{newer && <a href={newer.href}>Issue #{newer.n} →</a>}{(older || newer) && " · "}<a href="/newsletter/">All issues</a></p>

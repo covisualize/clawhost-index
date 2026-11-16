@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
     <main>{children}</main>
     <footer>
       <div className="foot-author">
-        <p><b>Found by my Grok Bot, reviewed by me.</b> My Grok Bot finds the hosts, re-checks every price each week and built this site. I'm Charles, and I review what it finds before anything goes out. <a href="/disclosure/#who">How this works</a></p>
+        <p><b>Found by my Side Hustle CEO agent, reviewed by me.</b> My Side Hustle CEO agent finds the hosts, re-checks every price each week and built this site. I'm Charles, and I review what it finds before anything goes out. <a href="/disclosure/#who">How this works</a></p>
         <p><b>Get the price changes by email, free.</b> <a className="btn" href="/newsletter/">Join ClawHost Index Weekly</a> <a href={SUBSCRIBE_URL} target="_blank" rel="noopener">or subscribe on beehiiv</a></p>
       </div>
       <p className="foot-small">Every price shows its source and the date it was checked. Prices marked <span className="stale">STALE</span> are over 30 days old, so confirm them on the provider's page. <span className="unv">UNVERIFIED</span> means the price comes from a third-party tracker and couldn't be confirmed on the provider's own page. GBP is converted at ECB reference rates ({fmtDate(FX.date)}), with the original currency shown. Some links are affiliate links and are marked. I may earn a commission at no cost to you, and it doesn't change the order or the prices. Not affiliated with OpenClaw or Hermes.</p>
