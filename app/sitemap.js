@@ -1,4 +1,4 @@
-import { getPlans } from "../lib/plans";
+import { getPlans, latestChecked } from "../lib/plans";
 import { getIssues } from "../lib/issues";
 import { SITE_URL } from "../lib/site";
 
@@ -6,7 +6,7 @@ export const dynamic = "force-static";
 
 export default function sitemap() {
   const plans = getPlans();
-  const checked = plans.map(p => p.source_checked.length === 7 ? p.source_checked + "-01" : p.source_checked).sort().pop();
+  const checked = latestChecked(plans);
   const issues = getIssues();
   const u = (path, lastModified, priority) => ({ url: `${SITE_URL}${path}`, lastModified, priority });
   return [
@@ -17,6 +17,8 @@ export default function sitemap() {
     u("/calculator/", checked, 0.6),
     u("/cost/", checked, 0.7),
     u("/which-plan/", checked, 0.7),
+    u("/data/", checked, 0.5),
+    u("/changelog/", checked, 0.5),
     u("/disclosure/", checked, 0.3),
     ...[...new Set(plans.map(p => p.providerSlug))].map(s => u(`/provider/${s}/`, checked, 0.6)),
   ];

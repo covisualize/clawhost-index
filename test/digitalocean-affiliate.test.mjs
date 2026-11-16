@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
+import Papa from "papaparse";
 
 const AWIN_DROPLET =
   "https://www.awin1.com/cread.php?awinmid=123996&awinaffid=3142395&ued=https%3A%2F%2Fwww.digitalocean.com%2Fpricing%2Fdroplets";
@@ -17,8 +18,9 @@ describe("DigitalOcean Awin affiliate links", () => {
     }
     assert.equal(lines.filter((line) => line.includes("awin1.com")).length, 2);
     assert.ok(lines.some((line) => line.startsWith("InterServer,") && line.includes(INTERSERVER)));
-    for (const line of lines.filter((l) => !l.startsWith("DigitalOcean,") && !l.startsWith("InterServer,"))) {
-      assert.equal(line.endsWith(","), true, `${line.split(",")[0]} should not gain an affiliate URL`);
+    const rows = Papa.parse(read("data.csv"), { header: true, skipEmptyLines: true }).data;
+    for (const r of rows.filter((r) => r.provider !== "DigitalOcean" && r.provider !== "InterServer")) {
+      assert.equal(r.affiliate_url, "", `${r.provider} should not gain an affiliate URL`);
     }
   });
 
