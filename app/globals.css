@@ -58,6 +58,27 @@ footer .btn{color:#fff;margin-right:8px}
 .foot-small{font-size:12px;color:#8b949e;margin:0}
 footer{max-width:1200px;margin:0 auto}
 
+/* ---- /cost/ calculator and /which-plan/ ---- */
+.calc .row{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 12px}
+.calc label{font-size:13px;color:#9aa4ae;display:flex;flex-direction:column;gap:4px;flex:1 1 220px;min-width:0}
+.calc select,.calc input[type=number]{width:100%}
+.calc fieldset{border:1px solid #1f2933;border-radius:8px;padding:10px 14px;margin:14px 0 12px;display:flex;flex-wrap:wrap;gap:8px 18px}
+.calc legend{color:#9aa4ae;font-size:13px;padding:0 4px}
+.calc fieldset label{flex:0 0 auto;flex-direction:row;align-items:center;gap:6px;font-size:14px;color:#e6edf3}
+.warn{background:#4a3b10;color:#ffd98a;padding:8px 12px;border-radius:6px;font-size:14px}
+.warn a{color:#ffe7b0}
+.cost-out{border-top:1px solid #1f2933;margin-top:14px;padding-top:6px}
+.cost-total{font-size:20px;margin:8px 0}
+.scroll{overflow-x:auto;max-width:100%}
+.scroll table{min-width:600px}
+table.compare ul{margin:0;padding-left:18px}table.compare li{margin:0 0 4px}
+table.compare th[scope=row]{white-space:nowrap}
+.pick h3{margin:20px 0 4px}
+@media (max-width:640px){
+  .calc label{flex-basis:100%}
+  .cost-total{font-size:17px}
+}
+
 /* ---- mobile: nav wraps, tables become cards, no sideways scroll ---- */
 /* the 9-column table is too wide below about 820px, so tablets get cards too */
 @media (max-width:820px){

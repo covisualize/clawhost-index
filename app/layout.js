@@ -17,7 +17,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (<html lang="en-GB"><body>
-    <header><a href="/" className="logo">🦞 ClawHost Index</a><nav aria-label="Main"><a href="/">Plans</a><a href="/calculator/">Calculator</a><a href="/gotchas/">7 gotchas</a><a href="/newsletter/">Newsletter</a><a href="/disclosure/">Disclosure</a></nav></header>
+    <header><a href="/" className="logo">🦞 ClawHost Index</a><nav aria-label="Main"><a href="/">Plans</a><a href="/calculator/">Calculator</a><a href="/cost/">Real cost</a><a href="/which-plan/">Which plan</a><a href="/gotchas/">7 gotchas</a><a href="/newsletter/">Newsletter</a><a href="/disclosure/">Disclosure</a></nav></header>
     <main>{children}</main>
     <footer>
       <div className="foot-author">

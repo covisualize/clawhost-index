@@ -15,6 +15,8 @@ export default function sitemap() {
     u("/newsletter/", issues[0]?.date || checked, 0.8),
     ...issues.map(i => u(i.href, i.date, 0.5)),
     u("/calculator/", checked, 0.6),
+    u("/cost/", checked, 0.7),
+    u("/which-plan/", checked, 0.7),
     u("/disclosure/", checked, 0.3),
     ...[...new Set(plans.map(p => p.providerSlug))].map(s => u(`/provider/${s}/`, checked, 0.6)),
   ];
