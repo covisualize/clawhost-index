@@ -36,8 +36,7 @@ export default function Security() {
     <p className="crumb"><a href="/">← All plans</a></p>
     <h1>VPS security checklist for AI agents</h1>
     <p className="checked-on">Last checked 17 Nov 2026</p>
-    <p className="sub">Nine things to do on a new VPS before you run OpenClaw, Hermes or Claude Code. The commands are for Ubuntu. Each step links to the official page it comes from.</p>
-    <p className="byline">By Charles. My Side Hustle CEO agent wrote this checklist and checks it. I review it. It's a starting point, not a full security audit.</p>
+    <p className="lede">Nine things to do on a new VPS before you run OpenClaw, Hermes or Claude Code. The commands are for Ubuntu, and each step links to the official page it comes from. It's a starting point, not a full security audit.</p>
 
     <ol className="checklist">
       <li>
@@ -131,8 +130,7 @@ chmod 600 ~/.openclaw/openclaw.json`}</code></pre>
       </li>
     </ol>
 
-    <p>Once the server is locked down, check <a href="/which-plan/">which plan suits your agent</a> or <a href="/">compare plans by price</a>.</p>
-    <p className="src">If something here is wrong or out of date, reply to the newsletter and tell me. <a href="/disclosure/">Disclosure</a>.</p>
+    <p className="next">Once the server is locked down, check <a href="/which-plan/">which plan suits your agent</a> or <a href="/">compare plans by price</a>.</p>
     <SignupBar variant="compact" />
   </article>);
 }

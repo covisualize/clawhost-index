@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { getPlans, FX } from "../../lib/plans";
 import { pageMeta, fmtDate } from "../../lib/site";
 import { AGENTS, AGENTS_CHECKED, SRC, supports } from "../../lib/agents";
@@ -22,12 +23,12 @@ function FreeTiers({ plans, agent }) {
 }
 
 function Plans({ rows }) {
-  return (<table className="plans plans-pick"><thead><tr><th>Provider / plan</th><th>Price /mo (GBP)</th><th>vCPU</th><th>RAM</th><th>Type</th></tr></thead>
+  return (<table className="plans plans-pick"><thead><tr><th>Provider / plan</th><th>Price /mo (GBP)</th><th>vCPU · RAM</th><th>Checked</th></tr></thead>
     <tbody>{rows.map(p => <tr key={p.id}>
       <td data-label="Plan" className="c-name"><a href={`/provider/${p.providerSlug}/`}>{p.provider}</a><br/><span className="src">{p.plan}</span></td>
-      <td data-label="Price /mo" className="c-price"><b>£{p.gbp.toFixed(2)}</b><br/><span className="src">{p.currency === "EUR" ? "€" : "$"}{p.price.toFixed(2)} {p.currency} · checked {p.source_checked}</span>{p.billing_note && <><br/><span className="src note">{p.billing_note}</span></>}</td>
-      <td data-label="vCPU" className="c-spec">{p.vcpu}</td><td data-label="RAM" className="c-spec">{p.ram_gb} GB</td>
-      <td data-label="Type" className="c-spec">{p.managed ? "Managed" : p.type === "free" ? "Free tier" : "VPS"}</td>
+      <td data-label="Price /mo" className="c-price"><b className="gbp">£{p.gbp.toFixed(2)}</b><span className="src orig">{p.currency === "EUR" ? "€" : "$"}{p.price.toFixed(2)} {p.currency}</span>{p.billing_note && <span className="src note">{p.billing_note}</span>}</td>
+      <td data-label="Specs" className="c-spec">{p.vcpu} vCPU · {p.ram_gb} GB<span className="src kind">{p.managed ? "Managed" : "VPS"}</span></td>
+      <td data-label="Source" className="src c-src">Checked <time dateTime={p.source_checked}>{p.checkedLabel}</time></td>
     </tr>)}</tbody></table>);
 }
 
@@ -35,24 +36,27 @@ export default function WhichPlan() {
   const plans = getPlans();
   const floor = Math.min(...plans.map(p => p.ram_gb));
   const checked = fmtDate(AGENTS_CHECKED);
-  const rows = [
+  const specs = [
     ["Minimum RAM", a => a.minRam], ["Comfortable RAM", a => a.comfyRam],
     ["Minimum vCPU", a => a.minVcpu || NONE], ["Comfortable vCPU", a => a.comfyVcpu || NONE],
-    ["Notes", a => <ul>{a.notes.map(n => <li key={n}>{n}</li>)}</ul>],
-    ["Source", a => <>{a.sources.map((s, i) => <span key={s.url}>{i > 0 && <br/>}<a href={s.url}>{s.label}</a></span>)}<br/><span className="src">checked {checked}</span></>],
   ];
   return (<>
+    <AffiliateNote />
     <p className="crumb"><a href="/">← All plans</a></p>
     <h1>Which plan for which agent</h1>
-    <p className="sub intro">What OpenClaw, Hermes and Claude Code say they need, taken from their own docs, and the cheapest plans in the index that meet it. Where the docs give no figure, this page says so rather than guess.</p>
-    <AffiliateNote />
+    <p className="lede">What OpenClaw, Hermes and Claude Code say they need, from their own docs, and the cheapest plans that meet it. Where the docs give no figure, this page says so.</p>
 
     <h2>What each agent needs</h2>
-    <div className="scroll"><table className="compare">
-      <thead><tr><th><span className="sr-only">Requirement</span></th>{AGENTS.map(a => <th key={a.id} scope="col">{a.name}</th>)}</tr></thead>
-      <tbody>{rows.map(([label, cell]) => <tr key={label}><th scope="row">{label}</th>{AGENTS.map(a => <td key={a.id}>{cell(a)}</td>)}</tr>)}</tbody>
-    </table></div>
-    <p className="src">All figures checked {checked}. OpenClaw's main install page gives no RAM or CPU figure, so its numbers come from the Raspberry Pi, Fly.io and DigitalOcean guides. Neither OpenClaw nor Claude Code gives an official comfortable vCPU figure.</p>
+    <p className="src">From each agent's own docs, checked {checked}.</p>
+    <div className="needs">{AGENTS.map(a => <section key={a.id} className="box" aria-labelledby={`need-${a.id}`}>
+      <h3 id={`need-${a.id}`}>{a.name}</h3>
+      <dl>{specs.map(([label, cell]) => <Fragment key={label}><dt>{label}</dt><dd>{cell(a)}</dd></Fragment>)}</dl>
+      <details className="more">
+        <summary>Notes and sources</summary>
+        <ul>{a.notes.map(n => <li key={n}>{n}</li>)}</ul>
+        <p className="src">{a.sources.map((s, i) => <span key={s.url}>{i > 0 && " · "}<a href={s.url}>{s.label}</a></span>)}</p>
+      </details>
+    </section>)}</div>
 
     <article className="prose">
       <h2>What pushes needs up</h2>
@@ -65,7 +69,7 @@ export default function WhichPlan() {
     </article>
 
     <h2>Cheapest suitable plans</h2>
-    <p className="src">Paid plans, cheapest first, in GBP converted at ECB reference rates of {fmtDate(FX.date)}, with the original price and the date it was checked. Managed plans are only listed for the agents they support. Every plan in the index has at least {floor} GB RAM.</p>
+    <p className="src">Paid plans, cheapest first. GBP at ECB rates of {fmtDate(FX.date)}. Managed plans only appear for the agents they support. Every plan in the index has at least {floor} GB RAM.</p>
     {AGENTS.map(a => {
       const min = cheapest(plans, a, a.minRamGb), comfy = cheapest(plans, a, a.comfyRamGb);
       const same = min.map(p => p.id).join() === comfy.map(p => p.id).join();
@@ -78,7 +82,7 @@ export default function WhichPlan() {
       </section>);
     })}
 
-    <div className="box">Work out the full monthly bill, server plus model tokens, on <a href="/cost/">what it really costs</a>. Or size a server with the <a href="/calculator/">calculator</a>. Before you install an agent, run through the <a href="/security/">VPS security checklist</a>.</div>
+    <p className="next">Next: work out the full monthly bill on <a href="/cost/">what it really costs</a>, size a server with the <a href="/calculator/">calculator</a>, or lock it down with the <a href="/security/">VPS security checklist</a>.</p>
     <SignupBar variant="compact" />
   </>);
 }

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getIssues, renderBody } from "../../../lib/issues";
 import { pageMeta } from "../../../lib/site";
+import AffiliateNote from "../../AffiliateNote";
 import SignupBar from "../../SignupBar";
 
 export const dynamicParams = false;
@@ -17,12 +18,12 @@ export default async function Issue({ params }) {
   if (!i) notFound();
   const newer = issues.find(x => x.n === i.n + 1), older = issues.find(x => x.n === i.n - 1);
   return (<article className="prose">
+    <AffiliateNote />
     <p className="crumb"><a href="/newsletter/">← All issues</a></p>
     <h1>{i.subject}</h1>
-    <p className="src">Issue #{i.n} · sent {i.dateLabel} · archive copy of the email</p>
-    <p className="byline">My Side Hustle CEO agent finds the hosts and checks the prices, and I review what it finds before each issue goes out. Prices here are as of {i.dateLabel}. <a href="/">See today's prices</a>.</p>
+    <p className="src">Issue #{i.n} · sent {i.dateLabel} · archive copy, so prices are as of that date. <a href="/">See today's prices</a></p>
     <div className="issue-body" dangerouslySetInnerHTML={{ __html: renderBody(i.body) }} />
     <SignupBar variant="compact" />
-    <p>{older && <a href={older.href}>← Issue #{older.n}</a>}{older && newer && " · "}{newer && <a href={newer.href}>Issue #{newer.n} →</a>}{(older || newer) && " · "}<a href="/newsletter/">All issues</a></p>
+    <p className="next">{older && <a href={older.href}>← Issue #{older.n}</a>}{older && newer && " · "}{newer && <a href={newer.href}>Issue #{newer.n} →</a>}{(older || newer) && " · "}<a href="/newsletter/">All issues</a></p>
   </article>);
 }

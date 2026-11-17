@@ -17,15 +17,11 @@ export default function Home() {
     <AffiliateNote />
     <h1>Host prices for OpenClaw, Hermes and Claude Code, checked this week.</h1>
     <p className="checked-on">Last checked {fmtDate(latestChecked(plans))}</p>
-    <p className="sub intro">{plans.length} plans, cheapest first. If a plan has been replaced or is no longer for sale, the row says so.</p>
-    <p className="hero-cta"><a className="btn" href="#plans">See the live list</a></p>
-    <p className="src hero-how">Each price is taken from the provider's own page, with the date it was checked. I review what my Side Hustle CEO agent finds.</p>
-    <SignupBar variant="full" />
+    <p className="lede">{plans.length} plans, cheapest first. Each price links to the provider's own page.</p>
+    <p><a className="btn" href="#plans">See the live list</a></p>
     <section id="plans" aria-label="Plans">
       <PlanTable plans={plans} fxDate={fmtDate(FX.date)} />
     </section>
-    <div className="box signup-end">
-      <b>Spotted a wrong price or a missing host?</b> Reply to any issue of the newsletter and tell me. <a href="#signup">Get the weekly email</a> or read the <a href="/newsletter/">latest issue</a>. The full list is also <a href="/data/">open data</a>.
-    </div>
+    <SignupBar variant="full" />
   </>);
 }

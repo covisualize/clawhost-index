@@ -60,7 +60,7 @@ export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
         {sorted.map(p => <option key={p.id} value={p.id}>{`${p.provider} ${p.plan} · ${p.ram_gb} GB · £${fmt(serverGbp(p, usdGbp))}/mo${p.type === "free" ? " · free tier" : ""}`}</option>)}
       </select></label>
     </div>
-    <p className="src">Default is the cheapest paid plan with at least {agent.minRamGb} GB RAM that lists {agent.name}. Free tiers are in the list too. <a href={`/provider/${plan.providerSlug}/`}>{plan.provider} plans and prices</a></p>
+    <p className="src">Starts on the cheapest paid plan with {agent.minRamGb} GB+ RAM that lists {agent.name}. Free tiers are in the list too. <a href={`/provider/${plan.providerSlug}/`}>{plan.provider} plans and prices</a></p>
     {plan.ram_gb < agent.minRamGb && <p className="warn" role="alert">{plan.ram_gb} GB is below {agent.name}'s minimum of {agent.minRamGb} GB. <a href="/which-plan/">See what it needs</a>.</p>}
     {!supports(plan, agent) && <p className="warn" role="alert">{plan.provider} lists {plan.agents.join(", ")} only, not {agent.name}.</p>}
     {plan.type === "free" && <p className="warn">This is a free tier, and free tiers have limits. See <a href="/gotchas/">7 gotchas</a> before you rely on it.</p>}
@@ -79,7 +79,6 @@ export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
         {modelSelect}
       </div>
       <div className="row">{tokenInputs}</div>
-      <p className="src">The presets are illustrative assumptions, not measured usage. Change the token numbers to match yours. This ignores caching: real bills can be lower with caching, or higher with long contexts and retries.</p>
     </>}
     {mode === "spend" && <div className="row">
       <label>Monthly model spend<input type="number" inputMode="decimal" min={0} step="any" placeholder="from your API bill" value={spend} onChange={e => setSpend(e.target.value)} /></label>
@@ -95,18 +94,21 @@ export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
       <p className="src">Picking a model fills in its listed prices. Edit them for caching, batch or another model.</p>
     </>}
 
-    <div className="row">
-      <label>USD → GBP rate<input type="number" inputMode="decimal" min={0} step="any" value={rate} onChange={e => onRate(e.target.value)} /></label>
-    </div>
-    <p className="src">Default is the ECB reference rate of {fxDate} (<a href={fxSource}>source</a>). Used for USD model prices and USD-priced plans, including the plan list above. EUR-priced plans keep the site's ECB EUR → GBP conversion, because this box is USD → GBP only.</p>
+    <details className="more">
+      <summary>Assumptions and exchange rate</summary>
+      <p>The usage presets are illustrative, not measured. Change the token numbers to match yours. This ignores caching: real bills can be lower with caching, or higher with long contexts and retries.</p>
+      <div className="row">
+        <label>USD → GBP rate<input type="number" inputMode="decimal" min={0} step="any" value={rate} onChange={e => onRate(e.target.value)} /></label>
+      </div>
+      <p>Default is the ECB reference rate of {fxDate} (<a href={fxSource}>source</a>). It's used for USD model prices and USD-priced plans, including the plan list above. EUR-priced plans keep the site's ECB EUR → GBP conversion.</p>
+    </details>
 
     <div className="cost-out" aria-live="polite">
       <p className="cost-total">Server £<b data-testid="server-gbp" id="server-gbp">{fmt(server)}</b> + Model £<b data-testid="model-gbp" id="model-gbp">{fmt(modelGbp)}</b> = Total £<b data-testid="total-gbp" id="total-gbp">{fmt(total)}</b> per month</p>
       <p>The model is <b data-testid="model-share" id="model-share">{share}%</b> of the total.</p>
-      <p className="src">Server is the listed monthly price of {`${plan.provider} ${plan.plan}`} ({`${plan.currency === "EUR" ? "€" : plan.currency === "GBP" ? "£" : "$"}${plan.price.toFixed(2)} ${plan.currency}`}). {plan.billing_note
-        ? <>Terms: <b data-testid="plan-terms" id="plan-terms">{plan.billing_note}</b>. An intro, upfront or yearly price isn't always what you'll pay each month, so check the <a href={`/provider/${plan.providerSlug}/`}>provider page</a>.</>
+      <p className="src">Server is {`${plan.provider} ${plan.plan}`} at its listed monthly price ({`${plan.currency === "EUR" ? "€" : plan.currency === "GBP" ? "£" : "$"}${plan.price.toFixed(2)} ${plan.currency}`}). Renews at <b data-testid="renewal-gbp" id="renewal-gbp">{renews === null ? "Not stated" : `£${fmt(renews)}`}</b>{renews === null ? " on the provider's page." : " a month after any intro or promo period."} {plan.billing_note
+        ? <>Terms: <b data-testid="plan-terms" id="plan-terms">{plan.billing_note}</b>. Check the <a href={`/provider/${plan.providerSlug}/`}>provider page</a> for what you'll pay each month.</>
         : <span data-testid="plan-terms" id="plan-terms">No extra terms noted in the index.</span>}</p>
-      <p className="src">Renews at <b data-testid="renewal-gbp" id="renewal-gbp">{renews === null ? "Not stated" : `£${fmt(renews)}`}</b>{renews === null ? " on the provider's page." : " a month after any intro or promo period."}</p>
     </div>
   </div>);
 }

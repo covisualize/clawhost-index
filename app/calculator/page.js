@@ -1,4 +1,5 @@
 import Calc from "./Calc";
+import AffiliateNote from "../AffiliateNote";
 import SignupBar from "../SignupBar";
 import { pageMeta } from "../../lib/site";
 
@@ -8,4 +9,13 @@ export const metadata = pageMeta({
   path: "/calculator/",
 });
 
-export default function Page() { return (<><h1>How big a server does my agent need?</h1><p className="sub">A rough guide, not a benchmark. 4 GB suits one person on a hosted model. 8 GB suits browser automation or Docker builds, and OpenClaw's docs ask for 6 GB or more for a source build.</p><Calc /><SignupBar variant="compact" /></>); }
+export default function Page() {
+  return (<>
+    <AffiliateNote />
+    <p className="crumb"><a href="/">← All plans</a></p>
+    <h1>How big a server does my agent need?</h1>
+    <p className="lede">A rough guide, not a benchmark. 4 GB suits one person on a hosted model. 8 GB suits browser automation or Docker builds, and OpenClaw's docs ask for 6 GB or more for a source build.</p>
+    <Calc />
+    <SignupBar variant="compact" />
+  </>);
+}

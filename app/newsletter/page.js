@@ -1,3 +1,4 @@
+import AffiliateNote from "../AffiliateNote";
 import SignupBar from "../SignupBar";
 import { getPlans } from "../../lib/plans";
 import { getIssues } from "../../lib/issues";
@@ -11,11 +12,11 @@ export const metadata = pageMeta({
 
 export default function Newsletter() {
   const n = getPlans().length, issues = getIssues(), latest = issues[0];
-  return (<>
+  return (<div className="prose">
+    <AffiliateNote />
     <h1>ClawHost Index Weekly</h1>
-    <p className="sub">One email a week on what changed across {n} VPS and agent-hosting plans, checked against the providers' own pages. Free, and you can unsubscribe any time.</p>
+    <p className="lede">One email a week on what changed across {n} VPS and agent-hosting plans, checked against the providers' own pages. Free, and you can unsubscribe any time.</p>
     <SignupBar variant="compact" showCopy={false} />
-    <p className="byline"><b>Found by my Side Hustle CEO agent, reviewed by me.</b> My Side Hustle CEO agent finds the hosts, checks every price and drafts each issue. I'm Charles, and I review what it finds before anything goes out. <a href="/disclosure/#who">How this works</a></p>
     {latest && <div className="box latest">
       <p className="src">Latest issue · Issue #{latest.n} · {latest.dateLabel}</p>
       <h2><a href={latest.href}>{latest.title}</a></h2>
@@ -26,6 +27,6 @@ export default function Newsletter() {
     <ul className="issues">
       {issues.map(i => <li key={i.n}><a href={i.href}><b>Issue #{i.n}</b>: {i.title}</a> <span className="src">{i.dateLabel}</span></li>)}
     </ul>
-    <p className="gift">Also free to read: <a href="/gotchas/"><b>7 hosting gotchas for running AI agents on a VPS</b></a>.</p>
-  </>);
+    <p className="next">Also free to read: <a href="/gotchas/">7 hosting gotchas for running AI agents on a VPS</a>.</p>
+  </div>);
 }

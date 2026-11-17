@@ -1,5 +1,5 @@
 import "./globals.css";
-import { SITE_URL, SITE_NAME, SUBSCRIBE_URL, fmtDate } from "../lib/site";
+import { SITE_URL, SITE_NAME, fmtDate } from "../lib/site";
 import { FX } from "../lib/plans";
 
 const DESC = "Dated, sourced prices for VPS and managed hosting plans that run AI agents like OpenClaw, Hermes and Claude Code. Every price links to the provider's own page.";
@@ -20,12 +20,20 @@ export default function RootLayout({ children }) {
     <header><a href="/" className="logo">🦞 ClawHost Index</a><nav aria-label="Main"><a href="/">Plans</a><a href="/calculator/">Calculator</a><a href="/cost/">Real cost</a><a href="/which-plan/">Which plan</a><a href="/gotchas/">7 gotchas</a><a href="/newsletter/">Newsletter</a><a href="/disclosure/">Disclosure</a></nav></header>
     <main>{children}</main>
     <footer>
-      <div className="foot-author">
-        <p><b>Found by my Side Hustle CEO agent, reviewed by me.</b> My Side Hustle CEO agent finds the hosts, re-checks every price each week and built this site. I'm Charles, and I review what it finds before anything goes out. <a href="/disclosure/#who">How this works</a></p>
-        <p><b>Get the price changes by email, free.</b> <a className="btn" href="/newsletter/">Join ClawHost Index Weekly</a> <a href={SUBSCRIBE_URL} target="_blank" rel="noopener">or subscribe on beehiiv</a></p>
-      </div>
-      <p className="foot-small">Every price shows its source and the date it was checked. Prices marked <span className="stale">STALE</span> are over 30 days old, so confirm them on the provider's page. <span className="unv">UNVERIFIED</span> means the price comes from a third-party tracker and couldn't be confirmed on the provider's own page. GBP is converted at ECB reference rates ({fmtDate(FX.date)}), with the original currency shown. Some links are affiliate links and are marked. I may earn a commission at no cost to you, and it doesn't change the order or the prices. Not affiliated with OpenClaw or Hermes.</p>
-      <p className="foot-small">Open data: <a href="/plans.csv">plans.csv</a> (<a href="/data/">what's in it</a>), licensed CC BY 4.0. <a href="/changelog/">Changelog</a>. <a href="/security/">VPS security checklist</a>.</p>
+      <p className="foot-by">My Side Hustle CEO agent finds the hosts and checks the prices. I'm Charles, and I review what it finds. Spotted a wrong price? Reply to any newsletter issue. <a href="/disclosure/#who">How this works</a></p>
+      <ul className="foot-links">
+        <li><a href="/data/">Data</a></li>
+        <li><a href="/plans.csv">plans.csv</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+        <li><a href="/security/">Security checklist</a></li>
+        <li><a href="/disclosure/">Disclosure</a></li>
+        <li><a href="/newsletter/">Newsletter</a></li>
+      </ul>
+      <details className="more foot-more">
+        <summary>How prices are checked</summary>
+        <p>Every price shows its source and the date it was checked. <span className="stale">STALE</span> means over 30 days old, so confirm it on the provider's page. <span className="unv">UNVERIFIED</span> means it comes from a third-party tracker and couldn't be confirmed on the provider's own page.</p>
+        <p>GBP is converted at ECB reference rates ({fmtDate(FX.date)}), with the original currency shown. Affiliate links are marked and don't change the order or the prices. The data is licensed CC BY 4.0. Not affiliated with OpenClaw or Hermes.</p>
+      </details>
     </footer>
   </body></html>);
 }
