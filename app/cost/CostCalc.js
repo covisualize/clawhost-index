@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { AGENTS, supports } from "../../lib/agents";
 import { MODELS, PRESETS, DEFAULT_MODEL } from "../../lib/models";
-import { serverGbp, sortPlans, defaultPlan } from "../../lib/cost";
+import { serverGbp, renewalServerGbp, sortPlans, defaultPlan } from "../../lib/cost";
 
 const num = (s) => { const n = parseFloat(s); return Number.isFinite(n) && n > 0 ? n : 0; };
 const fmt = (n) => n.toFixed(2);
@@ -36,6 +36,7 @@ export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
   const onModel = (id) => { const m = MODELS.find(x => x.id === id); setModelId(id); setInPrice(String(m.inUsd)); setOutPrice(String(m.outUsd)); };
 
   const server = serverGbp(plan, usdGbp);
+  const renews = renewalServerGbp(plan, usdGbp);
   const modelGbp = mode === "spend"
     ? (spendCur === "GBP" ? num(spend) : num(spend) * usdGbp)
     : (num(inM) * (mode === "preset" ? model.inUsd : num(inPrice)) + num(outM) * (mode === "preset" ? model.outUsd : num(outPrice))) * usdGbp;
@@ -105,6 +106,7 @@ export default function CostCalc({ plans, fxRate, fxDate, fxSource }) {
       <p className="src">Server is the listed monthly price of {`${plan.provider} ${plan.plan}`} ({`${plan.currency === "EUR" ? "€" : plan.currency === "GBP" ? "£" : "$"}${plan.price.toFixed(2)} ${plan.currency}`}). {plan.billing_note
         ? <>Terms: <b data-testid="plan-terms" id="plan-terms">{plan.billing_note}</b>. An intro, upfront or yearly price isn't always what you'll pay each month, so check the <a href={`/provider/${plan.providerSlug}/`}>provider page</a>.</>
         : <span data-testid="plan-terms" id="plan-terms">No extra terms noted in the index.</span>}</p>
+      <p className="src">Renews at <b data-testid="renewal-gbp" id="renewal-gbp">{renews === null ? "Not stated" : `£${fmt(renews)}`}</b>{renews === null ? " on the provider's page." : " a month after any intro or promo period."}</p>
     </div>
   </div>);
 }

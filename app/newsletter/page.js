@@ -15,7 +15,7 @@ export default function Newsletter() {
     <h1>ClawHost Index Weekly</h1>
     <p className="sub">One email a week on what changed across {n} VPS and agent-hosting plans, checked against the providers' own pages. Free, and you can unsubscribe any time.</p>
     <SignupBar variant="compact" showCopy={false} />
-    <p className="byline"><b>Found by my Grok Bot, reviewed by me.</b> My Grok Bot finds the hosts, checks every price and drafts each issue. I'm Charles, and I review what it finds before anything goes out. <a href="/disclosure/#who">How this works</a></p>
+    <p className="byline"><b>Found by my Side Hustle CEO agent, reviewed by me.</b> My Side Hustle CEO agent finds the hosts, checks every price and drafts each issue. I'm Charles, and I review what it finds before anything goes out. <a href="/disclosure/#who">How this works</a></p>
     {latest && <div className="box latest">
       <p className="src">Latest issue · Issue #{latest.n} · {latest.dateLabel}</p>
       <h2><a href={latest.href}>{latest.title}</a></h2>
