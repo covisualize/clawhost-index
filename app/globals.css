@@ -91,6 +91,14 @@ table.compare th[scope=row]{white-space:nowrap}
 .checked{white-space:nowrap}
 .changes{list-style:none;padding:0}.changes li{margin:0 0 18px}
 .changes h2{margin:0 0 4px;font-size:18px}.changes ul{margin:4px 0 0;padding-left:20px}
+/* ---- /security/ checklist: code blocks scroll inside their box, never the page ---- */
+.prose code{font-family:ui-monospace,monospace;font-size:.92em}
+.prose pre{background:#111821;border:1px solid #1f2933;border-radius:8px;padding:10px 12px;margin:8px 0;max-width:100%;overflow-x:auto;line-height:1.45}
+.prose pre code{font-size:13px;white-space:pre}
+.checklist{padding-left:22px}.checklist li{margin:0 0 22px}
+.checklist h2{margin:0 0 4px;font-size:18px}
+.checklist li::marker{font-weight:700;color:#9aa4ae}
+.checklist p{margin:6px 0}
 .cols dt{font-family:ui-monospace,monospace;font-weight:600;margin-top:8px}.cols dd{margin:2px 0 0 0;color:#c4ccd4}
 
 /* ---- mobile: nav wraps, tables become cards, no sideways scroll ---- */

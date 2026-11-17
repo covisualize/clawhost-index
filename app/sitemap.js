@@ -17,6 +17,7 @@ export default function sitemap() {
     u("/calculator/", checked, 0.6),
     u("/cost/", checked, 0.7),
     u("/which-plan/", checked, 0.7),
+    u("/security/", "2026-11-17", 0.6),
     u("/data/", checked, 0.5),
     u("/changelog/", checked, 0.5),
     u("/disclosure/", checked, 0.3),

@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         <p><b>Get the price changes by email, free.</b> <a className="btn" href="/newsletter/">Join ClawHost Index Weekly</a> <a href={SUBSCRIBE_URL} target="_blank" rel="noopener">or subscribe on beehiiv</a></p>
       </div>
       <p className="foot-small">Every price shows its source and the date it was checked. Prices marked <span className="stale">STALE</span> are over 30 days old, so confirm them on the provider's page. <span className="unv">UNVERIFIED</span> means the price comes from a third-party tracker and couldn't be confirmed on the provider's own page. GBP is converted at ECB reference rates ({fmtDate(FX.date)}), with the original currency shown. Some links are affiliate links and are marked. I may earn a commission at no cost to you, and it doesn't change the order or the prices. Not affiliated with OpenClaw or Hermes.</p>
-      <p className="foot-small">Open data: <a href="/plans.csv">plans.csv</a> (<a href="/data/">what's in it</a>), licensed CC BY 4.0. <a href="/changelog/">Changelog</a>.</p>
+      <p className="foot-small">Open data: <a href="/plans.csv">plans.csv</a> (<a href="/data/">what's in it</a>), licensed CC BY 4.0. <a href="/changelog/">Changelog</a>. <a href="/security/">VPS security checklist</a>.</p>
     </footer>
   </body></html>);
 }
