@@ -63,8 +63,12 @@ sudo systemctl restart ssh.service`}</code></pre>
 sudo adduser yourname sudo
 
 # in /etc/ssh/sshd_config:
-PermitRootLogin no`}</code></pre>
-        <Src links={[["Ubuntu user management", SRC.ubuntuUsers], ["sshd_config manual", SRC.sshdConfig], ["Hermes security", SRC.hermesSecurity]]} />
+PermitRootLogin no
+
+sudo sshd -t
+sudo systemctl restart ssh.service`}</code></pre>
+        <p>Then open a new terminal and check that logging in as root is refused.</p>
+        <Src links={[["Ubuntu user management", SRC.ubuntuUsers], ["Ubuntu OpenSSH server", SRC.ubuntuSsh], ["sshd_config manual", SRC.sshdConfig], ["Hermes security", SRC.hermesSecurity]]} />
       </li>
 
       <li>
