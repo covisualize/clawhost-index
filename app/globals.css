@@ -114,7 +114,9 @@ table.plans-pick td.c-spec,table.plans-provider td.c-spec{white-space:normal}
 .signup-form iframe{display:block;width:100% !important;max-width:560px !important;border:0;border-radius:8px}
 .signup:not(:has(.signup-copy)) .signup-form iframe{margin-inline:auto}
 .signup-fallback{margin:0}
-@media (min-width:960px){
+/* Side-by-side only when the bar itself is wide: inside .prose (68ch) it stays stacked. */
+.signup-wrap{container:signup/inline-size}
+@container signup (min-width:900px){
   .signup:has(.signup-copy){grid-template-columns:minmax(0,1fr) 560px;grid-template-areas:"copy form";column-gap:var(--sp-5);align-items:start}
 }
 .signup-cta{display:none}
