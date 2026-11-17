@@ -1,5 +1,6 @@
 import { getPlans, latestChecked, FX } from "../../lib/plans";
 import { pageMeta, fmtDate } from "../../lib/site";
+import AffiliateNote from "../AffiliateNote";
 
 export const metadata = pageMeta({
   title: "Open data: every plan as a CSV file",
@@ -29,6 +30,7 @@ const COLUMNS = [
 export default function Page() {
   const plans = getPlans();
   return (<div className="prose">
+    <AffiliateNote />
     <h1>Open data</h1>
     <p className="checked-on">Last updated {fmtDate(latestChecked(plans))}</p>
     <p>Every plan on this site is in one CSV file you can open in a spreadsheet or load into your own code. It has {plans.length} rows, one per plan, and it's rebuilt each time the prices are re-checked.</p>

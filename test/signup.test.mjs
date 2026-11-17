@@ -36,6 +36,15 @@ describe("beehiiv signup tidy-up", () => {
     assert.doesNotMatch(css, /minmax\(0,460px\)/);
     assert.doesNotMatch(css, /\.bh-embed\{[^}]*overflow:hidden/);
   });
+
+  it("only goes two-column when the bar itself is wide, not the viewport", () => {
+    const css = read("app/globals.css");
+    const bar = read("app/SignupBar.js");
+    assert.match(bar, /className="signup-wrap"/);
+    assert.match(css, /\.signup-wrap\{container:signup\/inline-size\}/);
+    assert.match(css, /@container signup \(min-width:\d+px\)\{\s*\.signup:has\(\.signup-copy\)\{grid-template-columns/);
+    assert.doesNotMatch(css, /@media[^{]*\{\s*\.signup:has\(\.signup-copy\)/);
+  });
 });
 
 describe("exported signup HTML", () => {
