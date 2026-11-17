@@ -73,7 +73,7 @@ export default function Gotchas() {
     <p>Akamai (Linode) shows a North America price, and LightNode says its price varies by location. UpCloud's page now shows euros only, so its 2 core / 4 GB Starter is {money(up)} a month, about {gbp(up.gbp)}. That's a change in how they show it, not necessarily a price cut. Check the price for your region and currency before you buy.</p>
 
     <h2>Before you pay: how much RAM?</h2>
-    <p>As a rough guide, 4 GB suits one person on a hosted model, and 8 GB suits browser automation or Docker builds. OpenClaw's docs ask for 6 GB or more for a source build. These are estimates, not benchmarks. Try the <a href="/calculator/">calculator</a>, then <a href="/">compare plans by price</a>.</p>
+    <p>As a rough guide, 4 GB suits one person on a hosted model, and 8 GB suits browser automation or Docker builds. OpenClaw's docs ask for 6 GB or more for a source build. These are estimates, not benchmarks. Try the <a href="/calculator/">calculator</a>, then <a href="/">compare plans by price</a>. Once you have a server, lock it down with the <a href="/security/">VPS security checklist</a>.</p>
 
     <p className="src">Some links on the site are affiliate links and they're clearly marked. They don't change the order, which is by price. <a href="/disclosure/">Disclosure</a>. If something here is wrong or out of date, reply to the newsletter and tell me.</p>
     <SignupBar variant="compact" />

@@ -78,7 +78,7 @@ export default function WhichPlan() {
       </section>);
     })}
 
-    <div className="box">Work out the full monthly bill, server plus model tokens, on <a href="/cost/">what it really costs</a>. Or size a server with the <a href="/calculator/">calculator</a>.</div>
+    <div className="box">Work out the full monthly bill, server plus model tokens, on <a href="/cost/">what it really costs</a>. Or size a server with the <a href="/calculator/">calculator</a>. Before you install an agent, run through the <a href="/security/">VPS security checklist</a>.</div>
     <SignupBar variant="compact" />
   </>);
 }
