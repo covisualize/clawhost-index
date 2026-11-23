@@ -19,8 +19,8 @@ AWS Lightsail,Linux 8GB (IPv4),vps,2,8,160,44.00,USD,monthly bundle,https://aws.
 Kamatera,Type A 4vCPU/4GB,vps,4,4,50,28.00,USD,monthly; built from Kamatera's own price calculator (4 Type A vCPU $12 + 4 GB $6 + 50 GB $10); Ubuntu,https://www.kamatera.com/pricing/,2026-11-23,provider,,28.00,https://www.kamatera.com/pricing/
 Vultr,Cloud Compute Regular 2vCPU/4GB,vps,2,4,80,20.00,USD,hourly,https://www.vultr.com/pricing/,2026-11-23,provider,,20.00,https://www.vultr.com/pricing/
 Vultr,Cloud Compute Regular 4vCPU/8GB,vps,4,8,160,40.00,USD,hourly,https://www.vultr.com/pricing/,2026-11-23,provider,,40.00,https://www.vultr.com/pricing/
-Contabo,Cloud VPS 4,vps,4,8,100,4.40,EUR,ex VAT; promo first 24 months; one-click OpenClaw,https://contabo.com/en/vps/,2026-11-23,provider,,,https://contabo.com/en/vps/
-Contabo,Cloud VPS 6,vps,6,12,200,6.00,EUR,ex VAT; promo first 24 months; one-click OpenClaw,https://contabo.com/en/vps/,2026-11-23,provider,,,https://contabo.com/en/vps/
+Contabo,Cloud VPS 4,vps,4,8,100,4.40,EUR,ex VAT; promo first 24 months; one-click OpenClaw,https://contabo.com/en/vps/,2026-11-23,provider,https://www.kqzyfj.com/click-101910290-17165311,,https://contabo.com/en/vps/
+Contabo,Cloud VPS 6,vps,6,12,200,6.00,EUR,ex VAT; promo first 24 months; one-click OpenClaw,https://contabo.com/en/vps/,2026-11-23,provider,https://www.kqzyfj.com/click-101910290-17165311,,https://contabo.com/en/vps/
 InterServer,4 Slices,vps,2,8,160,12.00,USD,monthly; no yearly discount,https://www.interserver.net/vps/,2026-11-23,provider,https://www.interserver.net/r/1211008,12.00,https://www.interserver.net/vps/
 LightNode,Agency 2vCPU/4GB,vps,2,4,50,14.70,USD,hourly; price varies by location,https://go.lightnode.com/vps-vps-hosting,2026-11-23,provider,,14.70,https://go.lightnode.com/vps-vps-hosting
 LightNode,Premium 4vCPU/8GB,vps,4,8,50,27.70,USD,hourly; price varies by location,https://go.lightnode.com/vps-vps-hosting,2026-11-23,provider,,27.70,https://go.lightnode.com/vps-vps-hosting

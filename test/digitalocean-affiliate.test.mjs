@@ -6,6 +6,7 @@ import Papa from "papaparse";
 const AWIN_DROPLET =
   "https://www.awin1.com/cread.php?awinmid=123996&awinaffid=3142395&ued=https%3A%2F%2Fwww.digitalocean.com%2Fpricing%2Fdroplets";
 const INTERSERVER = "https://www.interserver.net/r/1211008";
+const CONTABO_VPS = "https://www.kqzyfj.com/click-101910290-17165311";
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
 describe("DigitalOcean Awin affiliate links", () => {
@@ -19,7 +20,10 @@ describe("DigitalOcean Awin affiliate links", () => {
     assert.equal(lines.filter((line) => line.includes("awin1.com")).length, 2);
     assert.ok(lines.some((line) => line.startsWith("InterServer,") && line.includes(INTERSERVER)));
     const rows = Papa.parse(read("data.csv"), { header: true, skipEmptyLines: true }).data;
-    for (const r of rows.filter((r) => r.provider !== "DigitalOcean" && r.provider !== "InterServer")) {
+    for (const r of rows.filter((r) => r.provider === "Contabo")) {
+      assert.equal(r.affiliate_url, CONTABO_VPS, `${r.plan} should use the Contabo CJ URL`);
+    }
+    for (const r of rows.filter((r) => !["DigitalOcean", "InterServer", "Contabo"].includes(r.provider))) {
       assert.equal(r.affiliate_url, "", `${r.provider} should not gain an affiliate URL`);
     }
   });
