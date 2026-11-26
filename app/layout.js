@@ -24,6 +24,7 @@ export default function RootLayout({ children }) {
       <ul className="foot-links">
         <li><a href="/data/">Data</a></li>
         <li><a href="/plans.csv">plans.csv</a></li>
+        <li><a href="/plans.json">plans.json</a></li>
         <li><a href="/changelog/">Changelog</a></li>
         <li><a href="/security/">Security checklist</a></li>
         <li><a href="/disclosure/">Disclosure</a></li>

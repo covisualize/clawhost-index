@@ -35,10 +35,14 @@ describe("/plans.csv open data", () => {
 
   it("is built by a static route, linked from the footer, data page and disclosure", () => {
     assert.match(read("app/plans.csv/route.js"), /export const dynamic = "force-static"/);
+    assert.match(read("app/plans.json/route.js"), /export const dynamic = "force-static"/);
     assert.match(read("app/layout.js"), /href="\/plans\.csv"/);
+    assert.match(read("app/layout.js"), /href="\/plans\.json"/);
     assert.match(read("app/data/page.js"), /href="\/plans\.csv"/);
+    assert.match(read("app/data/page.js"), /href="\/plans\.json"/);
     assert.match(read("app/data/page.js"), /https:\/\/creativecommons\.org\/licenses\/by\/4\.0\//);
     assert.match(read("app/disclosure/page.js"), /href="\/plans\.csv"/);
+    assert.match(read("app/disclosure/page.js"), /href="\/plans\.json"/);
     const sitemap = read("app/sitemap.js");
     assert.match(sitemap, /u\("\/data\/"/);
     assert.match(sitemap, /u\("\/changelog\/"/);

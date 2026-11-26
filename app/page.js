@@ -1,6 +1,8 @@
 import { getPlans, latestChecked, FX } from "../lib/plans";
 import { pageMeta, fmtDate } from "../lib/site";
+import { siteJsonLd } from "../lib/jsonld";
 import AffiliateNote from "./AffiliateNote";
+import JsonLd from "./JsonLd";
 import PlanTable from "./PlanTable";
 import SignupBar from "./SignupBar";
 
@@ -14,6 +16,7 @@ export const metadata = pageMeta({
 export default function Home() {
   const plans = getPlans();
   return (<>
+    <JsonLd data={siteJsonLd(plans)} />
     <AffiliateNote />
     <h1>Host prices for OpenClaw, Hermes and Claude Code, checked this week.</h1>
     <p className="checked-on">Last checked {fmtDate(latestChecked(plans))}</p>

@@ -1,6 +1,8 @@
 import { getPlans } from "../../../lib/plans";
 import { pageMeta, fmtDate } from "../../../lib/site";
+import { providerJsonLd } from "../../../lib/jsonld";
 import AffiliateNote from "../../AffiliateNote";
+import JsonLd from "../../JsonLd";
 import SignupBar from "../../SignupBar";
 
 export function generateStaticParams() { return [...new Set(getPlans().map(p => p.providerSlug))].map(s => ({ slug: s })); }
@@ -20,7 +22,7 @@ export async function generateMetadata({ params }) {
 
 export default async function Provider({ params }) {
   const { slug: s } = await params; const plans = getPlans().filter(p => p.providerSlug === s);
-  return (<><AffiliateNote /><p className="crumb"><a href="/">← All plans</a></p><h1>{plans[0].provider}</h1>
+  return (<><JsonLd data={providerJsonLd(plans, s)} /><AffiliateNote /><p className="crumb"><a href="/">← All plans</a></p><h1>{plans[0].provider}</h1>
     <p className="lede">{plans.length} plan{plans.length > 1 ? "s" : ""}. Each price links to its source, with the date it was checked.</p>
     <table className="plans plans-provider"><thead><tr><th>Plan</th><th>Price /mo (GBP)</th><th>vCPU · RAM · disk</th><th>Notes</th><th>Checked</th><th><span className="sr-only">Link</span></th></tr></thead><tbody>
     {plans.map(p=><tr key={p.id}><td data-label="Plan" className="c-name">{p.plan}</td><td data-label="Price /mo" className="c-price"><b className="gbp">£{p.gbp.toFixed(2)}</b><span className="src orig">{p.currency==="EUR"?"€":"$"}{p.price.toFixed(2)} {p.currency}</span></td><td data-label="Specs" className="c-spec">{p.vcpu} vCPU · {p.ram_gb} GB · {p.disk_gb} GB disk</td><td data-label="Notes" className="c-notes src">{p.billing_note}</td>
