@@ -1,5 +1,5 @@
 import { getPlans, latestChecked, FX } from "../lib/plans";
-import { pageMeta, fmtDate } from "../lib/site";
+import { pageMeta, fmtDate, SITE_KEYWORDS } from "../lib/site";
 import { siteJsonLd } from "../lib/jsonld";
 import AffiliateNote from "./AffiliateNote";
 import JsonLd from "./JsonLd";
@@ -8,9 +8,10 @@ import SignupBar from "./SignupBar";
 
 export const metadata = pageMeta({
   absoluteTitle: true,
-  title: "ClawHost Index: VPS prices for running OpenClaw, Hermes and Claude Code",
+  title: "ClawHost Index: VPS prices for AI agents like OpenClaw, Hermes and Claude Code",
   description: `Compare ${getPlans().length} VPS and managed hosting plans for AI agents like OpenClaw, Hermes and Claude Code. Every price links to the provider's own page with the date it was checked.`,
   path: "/",
+  keywords: SITE_KEYWORDS,
 });
 
 export default function Home() {
