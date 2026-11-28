@@ -8,6 +8,7 @@ import { providerJsonLd, siteJsonLd } from "../lib/jsonld.js";
 import { llmsFullTxt, llmsTxt } from "../lib/llms.js";
 import { markdownPages, pageMarkdown } from "../lib/page-markdown.js";
 import { CSV_COLUMNS, getPlans, OPEN_DATA_COLUMNS, plansCsv, plansJson } from "../lib/plans.js";
+import { pageMeta, SITE_KEYWORDS, SITE_URL } from "../lib/site.js";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const plans = getPlans();
@@ -67,17 +68,56 @@ describe("/llms.txt and /llms-full.txt", () => {
 });
 
 describe("JSON-LD", () => {
-  it("describes a WebSite and Dataset without personal contact fields", () => {
+  it("describes a WebSite, Organization and Dataset without personal contact fields", () => {
     const data = siteJsonLd(plans);
     const types = data["@graph"].map(n => n["@type"]);
     assert.ok(types.includes("WebSite"));
+    assert.ok(types.includes("Organization"));
     assert.ok(types.includes("Dataset"));
     const blob = JSON.stringify(data);
-    assert.doesNotMatch(blob, /telephone|email|PostalAddress|streetAddress|postalCode/i);
+    assert.doesNotMatch(blob, /telephone|email|PostalAddress|streetAddress|postalCode|contactPoint/i);
+
+    const org = data["@graph"].find(n => n["@type"] === "Organization");
+    assert.equal(typeof org.description, "string");
+    assert.ok(org.description.trim().length > 0);
+    assert.match(org.description, /VPS/i);
+    assert.match(org.description, /hosting/i);
+    assert.match(org.description, /OpenClaw/);
+    const logoUrl = typeof org.logo === "string" ? org.logo : org.logo?.url;
+    assert.equal(logoUrl, `${SITE_URL}/og.png`);
+    assert.ok(Array.isArray(org.sameAs) && org.sameAs.includes("https://github.com/covisualize/clawhost-index"));
+
+    const website = data["@graph"].find(n => n["@type"] === "WebSite");
     const dataset = data["@graph"].find(n => n["@type"] === "Dataset");
     assert.ok(dataset.distribution.some(d => d.contentUrl.endsWith("/plans.csv")));
     assert.ok(dataset.distribution.some(d => d.contentUrl.endsWith("/plans.json")));
     assert.equal(dataset.license, "https://creativecommons.org/licenses/by/4.0/");
+
+    const termLists = [org.knowsAbout, website.keywords, dataset.keywords];
+    for (const terms of termLists) {
+      assert.ok(Array.isArray(terms) && terms.length > 0);
+      assert.ok(terms.includes("VPS prices"));
+      assert.ok(terms.includes("OpenClaw"));
+      assert.ok(terms.includes("Hermes"));
+      assert.ok(terms.includes("Claude Code"));
+      assert.ok(!terms.includes("VPS"), "must not include bare 'VPS'");
+      assert.ok(!terms.includes("AI agents"), "must not include bare 'AI agents'");
+    }
+  });
+
+  it("uses a brand-discoverable homepage title and keywords without polluting other pages", () => {
+    const expectedTitle = "ClawHost Index: VPS prices for AI agents like OpenClaw, Hermes and Claude Code";
+    const page = read("app/page.js");
+    assert.ok(page.includes(`title: "${expectedTitle}"`));
+    assert.match(page, /absoluteTitle:\s*true/);
+    assert.match(page, /path:\s*"\/"/);
+    assert.match(page, /keywords:\s*SITE_KEYWORDS/);
+    assert.ok(pageMarkdown("/").startsWith(`# ${expectedTitle}\n`));
+
+    const homeMeta = pageMeta({ title: expectedTitle, description: "desc", path: "/", absoluteTitle: true, keywords: SITE_KEYWORDS });
+    assert.deepEqual(homeMeta.keywords, SITE_KEYWORDS);
+    const otherMeta = pageMeta({ title: "Other", description: "desc", path: "/other/" });
+    assert.equal("keywords" in otherMeta, false);
   });
 
   it("lists provider plans as Offers and keeps Visit links on the HTML page sponsored", () => {
@@ -201,8 +241,13 @@ describe("exported agent files", () => {
     const home = read("out/index.html");
     assert.match(home, /application\/ld\+json/);
     assert.match(home, /"@type":"WebSite"/);
+    assert.match(home, /"@type":"Organization"/);
     assert.match(home, /"@type":"Dataset"/);
-    assert.doesNotMatch(home, /PostalAddress/);
+    assert.match(home, /https:\/\/clawhostindex\.com\/og\.png/);
+    assert.match(home, /https:\/\/github\.com\/covisualize\/clawhost-index/);
+    assert.doesNotMatch(home, /PostalAddress|contactPoint/);
+    assert.match(home, /<title>ClawHost Index: VPS prices for AI agents like OpenClaw, Hermes and Claude Code<\/title>/);
+    assert.match(home, /<meta name="keywords"/);
     const data = read("out/data/index.html");
     assert.match(data, /"@type":"Dataset"/);
     const provider = read("out/provider/hetzner/index.html");
